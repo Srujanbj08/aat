@@ -9,26 +9,36 @@ from helper_functions import log_info, log_error
 def main():
     """Main function to train the heart disease prediction model"""
     try:
+        # Define paths dynamically
+        BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+        PROJECT_ROOT = os.path.dirname(BASE_DIR) if os.path.basename(BASE_DIR) == 'src' else BASE_DIR
+        
         # Create directories if they don't exist
-        os.makedirs("artifacts", exist_ok=True)
-        os.makedirs("data/output", exist_ok=True)
+        artifacts_dir = os.path.join(PROJECT_ROOT, "artifacts")
+        data_output_dir = os.path.join(PROJECT_ROOT, "data", "output")
+        data_raw_dir = os.path.join(PROJECT_ROOT, "data", "raw")
+        
+        os.makedirs(artifacts_dir, exist_ok=True)
+        os.makedirs(data_output_dir, exist_ok=True)
+        os.makedirs(data_raw_dir, exist_ok=True)
         
         # Load data - using the Cleveland heart disease dataset
         log_info("Loading dataset...")
         try:
             # Try loading from local file first
-            file_path = "C:/Users/DHARSHAN KUMAR B J/Music/heart-disease-prediction/data/raw/prediction.csv"
+            file_path = os.path.join(data_raw_dir, "prediction.csv")
             if os.path.exists(file_path):
                 df = pd.read_csv(file_path)
+                log_info(f"Dataset loaded from {file_path}")
             else:
                 # If not found, load from UCI repository
+                log_info("Local file not found, loading from UCI repository...")
                 df = pd.read_csv("https://archive.ics.uci.edu/ml/machine-learning-databases/heart-disease/processed.cleveland.data", 
                                  header=None, 
                                  names=['age', 'sex', 'cp', 'trestbps', 'chol', 'fbs', 'restecg', 
                                         'thalach', 'exang', 'oldpeak', 'slope', 'ca', 'thal', 'target'])
                 
                 # Save to local file for future use
-                os.makedirs("data/raw", exist_ok=True)
                 df.to_csv(file_path, index=False)
                 log_info(f"Dataset saved to {file_path}")
         except Exception as e:
