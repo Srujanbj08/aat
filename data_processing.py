@@ -7,9 +7,12 @@ from sklearn.compose import ColumnTransformer
 from sklearn.pipeline import Pipeline
 from helper_functions import log_info, log_error
 
-# Define paths
-ARTIFACTS_PATH = "C:/Users/DHARSHAN KUMAR B J/Music/heart-disease-prediction/artifacts"
+# Define paths dynamically based on current working directory
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+PROJECT_ROOT = os.path.dirname(BASE_DIR) if os.path.basename(BASE_DIR) == 'src' else BASE_DIR
+ARTIFACTS_PATH = os.path.join(PROJECT_ROOT, "artifacts")
 os.makedirs(ARTIFACTS_PATH, exist_ok=True)
+
 PIPELINE_PATH = os.path.join(ARTIFACTS_PATH, "heart_pipeline.pkl")
 LABEL_ENCODER_PATH = os.path.join(ARTIFACTS_PATH, "heart_label_encoder.pkl")
 
