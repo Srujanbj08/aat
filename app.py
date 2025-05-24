@@ -1,4 +1,3 @@
-
 import streamlit as st
 import pandas as pd
 import numpy as np
@@ -79,13 +78,40 @@ st.markdown("""
 </style>
 """, unsafe_allow_html=True)
 
-# Define paths
-ARTIFACTS_PATH = "C:/Users/DHARSHAN KUMAR B J/Music/heart-disease-prediction/artifacts"
-DATA_OUTPUT_PATH = "C:/Users/DHARSHAN KUMAR B J/Music/heart-disease-prediction/data\output"
-os.makedirs(DATA_OUTPUT_PATH, exist_ok=True)
-MODEL_PATH = os.path.join(ARTIFACTS_PATH, "heart_model.pkl")
-PIPELINE_PATH = os.path.join(ARTIFACTS_PATH, "heart_pipeline.pkl")
-LABEL_ENCODER_PATH = os.path.join(ARTIFACTS_PATH, "heart_label_encoder.pkl")
+# Define paths dynamically
+def get_project_paths():
+    """Get project paths dynamically based on current working directory"""
+    # Get the current working directory (where the script is running)
+    current_dir = os.getcwd()
+    
+    # Define project structure paths
+    artifacts_path = os.path.join(current_dir, "artifacts")
+    data_output_path = os.path.join(current_dir, "data", "output")
+    
+    # Create directories if they don't exist
+    os.makedirs(artifacts_path, exist_ok=True)
+    os.makedirs(data_output_path, exist_ok=True)
+    
+    # Define model file paths
+    model_path = os.path.join(artifacts_path, "heart_model.pkl")
+    pipeline_path = os.path.join(artifacts_path, "heart_pipeline.pkl")
+    label_encoder_path = os.path.join(artifacts_path, "heart_label_encoder.pkl")
+    
+    return {
+        'artifacts_path': artifacts_path,
+        'data_output_path': data_output_path,
+        'model_path': model_path,
+        'pipeline_path': pipeline_path,
+        'label_encoder_path': label_encoder_path
+    }
+
+# Get dynamic paths
+PATHS = get_project_paths()
+ARTIFACTS_PATH = PATHS['artifacts_path']
+DATA_OUTPUT_PATH = PATHS['data_output_path']
+MODEL_PATH = PATHS['model_path']
+PIPELINE_PATH = PATHS['pipeline_path']
+LABEL_ENCODER_PATH = PATHS['label_encoder_path']
 
 def load_artifact(filepath):
     """Load a pickled artifact"""
@@ -102,8 +128,27 @@ def load_artifact(filepath):
 def get_model_evaluation():
     """Get model evaluation metrics from actual model performance"""
     try:
+        # Try to find dataset files in current directory or common paths
+        dataset_paths = [
+            'heart.csv',
+            'heart (1).csv',
+            os.path.join('data', 'heart.csv'),
+            os.path.join('data', 'heart (1).csv'),
+            os.path.join('datasets', 'heart.csv'),
+            os.path.join('datasets', 'heart (1).csv')
+        ]
+        
+        dataset_file = None
+        for path in dataset_paths:
+            if os.path.exists(path):
+                dataset_file = path
+                break
+        
+        if not dataset_file:
+            raise FileNotFoundError("Dataset file not found")
+        
         # Load the dataset and recreate the evaluation
-        df = pd.read_csv('heart.csv')  # or 'heart (1).csv' based on your file
+        df = pd.read_csv(dataset_file)
         
         X = df.drop('target', axis=1)
         y = df['target']
@@ -257,6 +302,24 @@ def predict_heart_disease(input_data):
     
     return None, None
 
+def find_dataset_files():
+    """Find available dataset files in the project directory"""
+    dataset_paths = [
+        'heart.csv',
+        'heart (1).csv',
+        os.path.join('data', 'heart.csv'),
+        os.path.join('data', 'heart (1).csv'),
+        os.path.join('datasets', 'heart.csv'),
+        os.path.join('datasets', 'heart (1).csv')
+    ]
+    
+    found_files = []
+    for path in dataset_paths:
+        if os.path.exists(path):
+            found_files.append(path)
+    
+    return found_files
+
 def main():
     """Main dashboard function"""
     
@@ -271,21 +334,24 @@ def main():
     )
     
     # Check if heart dataset exists for direct model training
-    dataset_exists = (
-        os.path.exists('heart.csv') or 
-        os.path.exists('heart (1).csv')
-    )
+    available_datasets = find_dataset_files()
+    dataset_exists = len(available_datasets) > 0
     
     if not artifacts_exist and not dataset_exists:
         st.error("🚨 Model artifacts and dataset not found.")
         st.info("💡 Please either:")
         st.info("1. Run 'python train.py' to train the model, OR")
         st.info("2. Upload 'heart.csv' or 'heart (1).csv' dataset to the project directory")
+        st.info(f"📂 Current working directory: {os.getcwd()}")
+        st.info(f"📁 Looking for artifacts in: {ARTIFACTS_PATH}")
         return
     
     if not artifacts_exist and dataset_exists:
         st.warning("🔄 Model artifacts not found, but dataset is available. The app will train a temporary model for this session.")
         st.info("💡 For better performance, run 'python train.py' to create persistent model artifacts.")
+        with st.expander("📁 Found Dataset Files"):
+            for dataset in available_datasets:
+                st.write(f"✅ {dataset}")
     
     # Sidebar for navigation
     st.sidebar.title("🧭 Navigation")
