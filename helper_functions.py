@@ -2,9 +2,12 @@ import os
 import logging
 from datetime import datetime
 
-# Define the log directory and file
-LOG_DIR = "C:/Users/DHARSHAN KUMAR B J/Music/heart-disease-prediction/logs"
+# Define the log directory dynamically
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+PROJECT_ROOT = os.path.dirname(BASE_DIR) if os.path.basename(BASE_DIR) == 'src' else BASE_DIR
+LOG_DIR = os.path.join(PROJECT_ROOT, "logs")
 os.makedirs(LOG_DIR, exist_ok=True)
+
 LOG_FILE = os.path.join(LOG_DIR, f"heart_app_log_{datetime.now().strftime('%Y%m%d')}.log")
 
 # Configure logging
