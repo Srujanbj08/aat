@@ -41,7 +41,7 @@ heart-disease-prediction/
 
 1. **Clone the repository:**
    ```bash
-   git clone https://github.com/yourusername/heart-disease-prediction.git
+   git clone https://github.com/Srujanbj08/Heart_Disease_MLOPS.git
    cd heart-disease-prediction
    ```
 
