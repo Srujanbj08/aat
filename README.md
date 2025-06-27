@@ -41,7 +41,7 @@ heart-disease-prediction/
 
 1. **Clone the repository:**
    ```bash
-   git clone https://github.com/yourusername/heart-disease-prediction.git
+   git clone https://github.com/Srujanbj08/aat.git
    cd heart-disease-prediction
    ```
 
@@ -153,7 +153,7 @@ This project is licensed under the MIT License - see the LICENSE file for detail
 
 ## 📞 Contact
 
-For questions or feedback, please open an issue on the GitHub repository or contact the maintainer at your-email@example.com.
+For questions or feedback, please open an issue on the GitHub repository or contact the maintainer at srujanbj.ai22@bmsce.ac.in.
 
 ---
 
