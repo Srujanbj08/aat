@@ -41,7 +41,7 @@ heart-disease-prediction/
 
 1. **Clone the repository:**
    ```bash
-   git clone https://github.com/Srujanbj08/aat.git
+   git clone https://github.com/yourusername/heart-disease-prediction.git
    cd heart-disease-prediction
    ```
 
@@ -133,6 +133,48 @@ The application expects heart disease data with the following features:
 - **F1 Score**: ~85%
 - **ROC AUC**: ~0.90
 
+## 🛠️ MLOps: CI/CD Pipeline with GitHub Actions and Render
+
+This project implements a complete MLOps pipeline using modern DevOps practices for automated testing, building, and deployment.
+
+### Pipeline Components
+
+| Component | Description |
+|-----------|-------------|
+| `docker-build-push.yml` | CI workflow: builds Docker image and pushes to Docker Hub |
+| `render-cd.yml` | CD workflow: triggers Render deployment on push |
+| `Dockerfile` | Containerizes the ML app (Streamlit/FastAPI) |
+| `app.py` | Sample ML app |
+| `.env.example` | Template for environment variables |
+
+### 🔧 GitHub Secrets Required
+
+| Secret Name | Description |
+|-------------|-------------|
+| `DOCKER_USERNAME` | Your Docker Hub username |
+| `DOCKER_PASSWORD` | Docker Hub personal access token (PAT) |
+| `RENDER_DEPLOY_HOOK` | Render deploy hook URL |
+
+### 🚀 How the Pipeline Works
+
+1. **Developer pushes code** to `main` branch
+2. **CI Pipeline (GitHub Actions)**:
+   - Runs automated tests
+   - Builds Docker image
+   - Pushes image to Docker Hub
+3. **CD Pipeline (Render)**:
+   - Calls Render deploy hook
+   - Pulls latest Docker image
+   - Updates live application
+
+### Pipeline Benefits
+
+- **Automated Testing**: Ensures code quality before deployment
+- **Containerization**: Consistent environments across development and production
+- **Zero-Downtime Deployment**: Seamless updates to the live application
+- **Version Control**: Tagged Docker images for rollback capabilities
+- **Monitoring**: Comprehensive logging throughout the pipeline
+
 ## 🔬 Future Improvements
 
 - Add more advanced explainability with SHAP and LIME
@@ -140,6 +182,8 @@ The application expects heart disease data with the following features:
 - Add cross-validation for more robust model evaluation
 - Enhance the UI with interactive visualizations
 - Add user authentication for clinical settings
+- Implement A/B testing for model versions
+- Add automated model retraining pipelines
 
 ## 📝 License
 
@@ -150,6 +194,9 @@ This project is licensed under the MIT License - see the LICENSE file for detail
 - [UCI Heart Disease Dataset](https://archive.ics.uci.edu/ml/datasets/heart+disease)
 - [Streamlit](https://streamlit.io/) for the user interface framework
 - [scikit-learn](https://scikit-learn.org/) for machine learning tools
+- [GitHub Actions Documentation](https://docs.github.com/en/actions)
+- [Render Deploy Hooks](https://render.com/docs/deploy-hooks)
+- [Docker Hub](https://hub.docker.com/) for container registry
 
 ## 📞 Contact
 
